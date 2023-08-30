@@ -1,7 +1,6 @@
-import { FormUser } from "./components/FormUser";
+
+import { UserModalForm } from "./components/UserModalForm";
 import { UsersList } from "./components/UsersList";
-import { useReducer, useState } from "react";
-import {usersReducer} from "./reducers/usersReducer";
 import { useUsers } from "./hooks/useUsers";
 
 
@@ -11,37 +10,62 @@ export function UsersApp() {
   const {
     users,
     userSelected,
-    setUserSelected,
+    initialUsersForm,
+    visibleForm,
     handlerAddUser,
     handlerDeleteUser,
     handlerUserSelected,
-    initialUsersForm
+    handlerOpenForm,
+    handlerCloseForm
+  
+  
   } = useUsers();
 
   
   return (
-    <div className="container my-4">
-      <h2>Users App</h2>
-      <div className="row">
-        <div className="col">
-          <FormUser 
-            handler={handlerAddUser}
-            initialUsersForm={initialUsersForm}
-            userSelected={userSelected}
-            />
-        </div>
-        <div className="col">
-          {
-            users.length === 0? <div className="alert alert-info" role="alert">No hay usuarios en el sistema!</div> :
-          <UsersList 
-            users={users} 
-            handlerDeleteUser={handlerDeleteUser} 
-            handlerUserSelected={handlerUserSelected}
-            />
-          }
+    <>
+      {!visibleForm || 
+        <UserModalForm 
+          userSelected={userSelected}
+          initialUsersForm={initialUsersForm}
+          handlerAddUser={handlerAddUser}
+          handlerCloseForm={handlerCloseForm}
+        />
+      }
+
+      <div className="container my-4">
+        <h2>Users App</h2>
+        <div className="row">
+          
+          {/* {!visibleForm ||
+            <div className="col">
+              <FormUser 
+                handler={handlerAddUser}
+                initialUsersForm={initialUsersForm}
+                userSelected={userSelected}
+                handlerCloseForm={handlerCloseForm}
+                />
+            </div>
+          } */}
+          
+          <div className="col">
+            {visibleForm ||
+              <button 
+                className="btn btn-primary my-2"
+                onClick={handlerOpenForm}>Nuevo usuario</button>
+            }
+            {
+              users.length === 0? <div className="alert alert-info" role="alert">No hay usuarios en el sistema!</div> :
+            <UsersList 
+              users={users} 
+              handlerDeleteUser={handlerDeleteUser} 
+              handlerUserSelected={handlerUserSelected}
+              />
+            }
+          </div>
         </div>
       </div>
-    </div>
+  </>
   )
 
 }

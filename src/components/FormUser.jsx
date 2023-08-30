@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-export function FormUser({initialUsersForm,handler, userSelected}) {
+import Swal from 'sweetalert2'
+export function FormUser({initialUsersForm,handlerAddUser, userSelected, handlerCloseForm}) {
 
 
     const [form, setform] = useState(initialUsersForm)
@@ -20,12 +21,18 @@ export function FormUser({initialUsersForm,handler, userSelected}) {
     const onSubmit = (e) =>{
         e.preventDefault()
         if(!username || !email || (!password && id === 0)){
-            alert('Todos los campos son obligatorios')
+
+            Swal.fire(
+                'Error de validación!',
+                'Debes completar todos los campos!',
+                'error'
+            )
+        
             return
         }
         //console.log('Enviando formulario')
         // Guardar el user form  en el listado de users
-        handler(form)
+        handlerAddUser(form)
         setform(initialUsersForm)
 
     }
@@ -61,6 +68,11 @@ export function FormUser({initialUsersForm,handler, userSelected}) {
             <button className="btn btn-primary" type="submit">
                 {id >0 ? 'Editar' : 'Crear'}
             </button>
+            <button 
+                className="btn btn-success mx-2" 
+                type="button"
+                onClick={handlerCloseForm}>Cerrar</button>
+
         </form>
     )
 }
